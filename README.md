@@ -77,5 +77,5 @@ cd react-a11y-project
 npm install
 
 3. Run development server
-4. 
+
 npm run dev
