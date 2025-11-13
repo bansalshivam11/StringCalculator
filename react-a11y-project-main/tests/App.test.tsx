@@ -26,13 +26,22 @@ describe('String Calculator Accessibility', () => {
   });
 
   test('calculate button is keyboard accessible', async () => {
-    render(<App />);
-    const user = userEvent.setup();
-    const button = screen.getByRole('button', { name: /calculate/i });
-    
-    await user.tab();
-    expect(button).toHaveFocus();
-  });
+  render(<App />);
+  const user = userEvent.setup();
+  const button = screen.getByRole('button', { name: /calculate/i });
+  
+  // Tab to first focusable element (textarea)
+  await user.tab();
+  
+  // Tab again to reach the button
+  await user.tab();
+  
+  expect(button).toHaveFocus();
+  
+  // Test that Enter key activates the button
+  await user.keyboard('{Enter}');
+});
+
 
   test('calculates sum correctly', async () => {
     render(<App />);
