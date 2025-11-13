@@ -1,12 +1,33 @@
-import { useState } from 'react';
+import { useState, ChangeEvent, FocusEvent } from 'react';
+import { add } from './stringCalculator';
 
-const App = () => {
-  const [input, setInput] = useState('');
-  const [result, setResult] = useState(null);
+const App: React.FC = () => {
+  const [input, setInput] = useState<string>('');
+  const [result, setResult] = useState<number | null>(null);
+  const [error, setError] = useState<string>('');
 
-  const handleCalculate = () => {
-    // Your calculation logic here
-    // For example: setResult(input.split(',').reduce((sum, num) => sum + Number(num), 0));
+  const handleCalculate = (): void => {
+    try {
+      setError('');
+      const sum = add(input);
+      setResult(sum);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
+      setResult(null);
+    }
+  };
+
+  const handleInputChange = (e: ChangeEvent<HTMLTextAreaElement>): void => {
+    setInput(e.target.value);
+    setError(''); // Clear error on input change
+  };
+
+  const handleFocus = (e: FocusEvent<HTMLButtonElement>): void => {
+    e.target.style.outline = '3px solid #ffa500';
+  };
+
+  const handleBlur = (e: FocusEvent<HTMLButtonElement>): void => {
+    e.target.style.outline = 'none';
   };
 
   return (
@@ -37,16 +58,18 @@ const App = () => {
         }}
         placeholder='Enter numbers separated by commas (e.g., 1,2,3)'
         value={input}
-        onChange={(e) => setInput(e.target.value)}
+        onChange={handleInputChange}
         aria-describedby='input-instructions'
       />
 
       <p id='input-instructions' style={{ fontSize: '0.9rem', color: '#555', marginTop: '4px' }}>
-        Make sure you enter numbers correctly, separated by commas!
+        Supports: comma (1,2,3), newline (1\n2\n3), or custom delimiter (//;\n1;2)
       </p>
 
       <button
         onClick={handleCalculate}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
         style={{
           padding: '12px 24px',
           backgroundColor: '#0066cc',
@@ -58,14 +81,29 @@ const App = () => {
           borderRadius: '4px',
           marginTop: '10px'
         }}
-        onFocus={(e) => e.target.style.outline = '3px solid #ffa500'}
-        onBlur={(e) => e.target.style.outline = 'none'}
         aria-label='Calculate the sum of entered numbers'
       >
         Calculate
       </button>
 
-      {result !== null && (
+      {error && (
+        <div 
+          role='alert'
+          style={{ 
+            marginTop: '20px',
+            padding: '12px',
+            backgroundColor: '#f8d7da',
+            border: '1px solid #f5c6cb',
+            borderRadius: '4px'
+          }}
+        >
+          <p style={{ color: '#721c24', fontWeight: 'bold', margin: 0 }}>
+            Error: {error}
+          </p>
+        </div>
+      )}
+
+      {result !== null && !error && (
         <div 
           role='status' 
           aria-live='polite'
