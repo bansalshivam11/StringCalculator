@@ -1,0 +1,1 @@
+{"root":["./src/app.tsx","./src/main.tsx","./src/stringcalculator.ts","./tests/app.test.tsx","./tests/jest.setup.ts","./tests/stringcalculator.test.ts"],"version":"5.9.3"}
