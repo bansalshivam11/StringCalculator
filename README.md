@@ -70,6 +70,7 @@ This application is **WCAG 2.1 Level AA compliant** and includes:
 1. **Clone the repository**
 
 git clone https://github.com/bansalshivam11/StringCalculator
+
 cd react-a11y-project
 
 2. Install dependencies
